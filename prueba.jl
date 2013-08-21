@@ -2,7 +2,7 @@ module prueba
 export printf, sprintf
 
 ### external printf interface ###
-function printf(args...)
+function sprintf(args...)
   if length(args) == 0
     error("printf: called with zero arguments")
   end
@@ -24,6 +24,12 @@ function printf(args...)
   at.args[2].args[1] = :Ptr
   at.args[2].args[2] = :Uint8
 
+  println("-----")
+  println(args[2])
+  println(args[2].len)
+  println(args[3])
+  println("-----")
+
   for ii in 3:length(args_type)
     at.args[ii] = symbol("$(args_type[ii])")
   end
@@ -31,12 +37,13 @@ function printf(args...)
   ex = :(ccall( (:sprintf, "libc"), Int32, $at, $(args...)) )
   str_len = eval(ex)
 
-  print(bytestring(str_out[1:str_len]))
+  return bytestring(str_out[1:str_len])
 
 #  return at, args, str_out
 end
 
-function sprintf(args...)
+function printf(args...)
+  str_line = sprintf(args...)
+  print(str_line)
 end
-
 end # module
